@@ -4,11 +4,13 @@ import Title from "../components/form/Title";
 import FormInput from "../components/form/FormInput";
 import CustomLink from "../components/user/CustomLink";
 import Submit from "../components/form/Submit";
+import FormContainer from "../components/form/FormContainer";
+import { commonModalClass } from "../context/utils/modelClass";
 export default function ForgotPassword() {
   return (
-    <div className="fixed inset-0 bg-primary -z-10 flex justify-center items-center">
+    <FormContainer>
       <Container>
-        <form className="bg-secondary rounded p-6 w-72 space-y-6">
+        <form className={commonModalClass + " w-72"}>
           <Title>Please Enter Your Email</Title>
           <FormInput label="Email" placeholder="John@email.com" name="email" />
 
@@ -19,6 +21,6 @@ export default function ForgotPassword() {
           </div>
         </form>
       </Container>
-    </div>
+    </FormContainer>
   );
 }

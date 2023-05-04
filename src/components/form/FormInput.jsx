@@ -1,21 +1,21 @@
 import React from "react";
 
-export default function FormInput({ name, rest, placeholder, label }) {
+export default function FormInput({ name, placeholder, label, ...rest }) {
   return (
     <div className="flex flex-col">
       <label
-        className="text-white font-semibold peer-fucus-whit "
+        className="dark:text-dark-subtle font-semibold dark:peer-focus:text-white self-start"
         htmlFor={name}
       >
         {label}
       </label>
       <input
-        {...rest}
         name={name}
         id={name}
-        className="bg-transparent rounded border-2 border-dark-subtle focus:border-white p-1 w-full text-lg outline-none text-white peer"
+        className="bg-transparent rounded border-2 dark:border-dark-subtle border-light-subtle dark:focus:border-white p-1 w-full text-lg  dark:text-white peer"
         type="text"
         placeholder={placeholder}
+        {...rest}
       />
     </div>
   );
