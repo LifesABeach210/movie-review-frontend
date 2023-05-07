@@ -17,7 +17,7 @@ export const Signup = () => {
   const stateUserEmail = useSelector((state) => state.users.email);
   const stateUserisValid = useSelector((state) => state.users.isValid);
   if (stateUserisValid === true) {
-    navigate("/auth/verify-email", {
+    navigate("/", {
       state: {
         username: stateUserName,
         email: stateUserEmail,

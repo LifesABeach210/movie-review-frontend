@@ -1,47 +1,55 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { createSlice } from "@reduxjs/toolkit";
 import { data } from "autoprefixer";
 import Axios from "../middleware/axios";
 import { useNavigate } from "react-router-dom";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const submitReview = createAsyncThunk(
-  "users/createUser",
+  "users/createPost",
   async (userData) => {
-    let response = Axios.get("/users/reviews", userData);
-    console.log(response, "first error more than likely line 9 userSlice");
-    return {
-      user: response.data,
-    };
+    console.log(userData, "SENDING POST");
+    let response = await Axios.post("/users/createPost", userData);
+    console.log(response, "SENDING POST RESPONSE");
+    return response;
   }
 );
 
-export const comedeinSlice = createSlice({
-  name: "reviews",
+export const getPost = createAsyncThunk("users/getPost", async (userData) => {
+  console.log(userData, "SENDING POST");
+  let response = await Axios.post("/users/fetch-post", userData);
+  console.log(response, "SENDING POST RESPONSE");
+  return response;
+});
+
+export const inputReviewSlice = createSlice({
+  name: "post",
   initialState: {
     firstname: "",
     lastname: "",
     Bio: "",
-    image: "",
-    review: "",
-    hasSubmited: false,
+    post: "",
+    hasSubmited: true,
     user_Id: "",
   },
   reducers: {},
 
   extraReducers: (builder) => {
-    builder.addCase(registerUser.fulfilled, (state, action) => {
+    builder.addCase(submitReview.fulfilled, (state, action) => {
       console.log("state", state, "payload", action.payload);
-      state.username = action.payload.username;
-      state.email = action.payload.email;
-      state.password = action.payload.password;
-      state.user_Id = action.payload.user_Id;
-      state.isValid = true;
+      // state.username = action.payload.username;
+      // state.email = action.payload.email;
+      // state.password = action.payload.password;
+      // state.user_Id = action.payload.user_Id;
+      state.hasSubmited = action.payload.data.hasSubmited;
+      console.log("REDUCER_PAYLOAD:", action.payload);
+    });
+    builder.addCase(getPost.fulfilled, (state, action) => {
+      console.log("state", state, "payload", action.payload);
     });
   },
 });
 
-export const {} = userSlice.actions;
+export const {} = inputReviewSlice.actions;
 
-export default userSlice.reducer;
+export default inputReviewSlice.reducer;

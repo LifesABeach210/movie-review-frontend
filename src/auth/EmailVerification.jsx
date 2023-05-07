@@ -24,16 +24,15 @@ const isValidOTP = (otp) => {
 export default function EmailVerification() {
   const dispatch = useDispatch();
   const usersName = useSelector((state) => state.users.username);
-  const usersEmail = useSelector((state) => state.users.email);
-  const usersIsValid = useSelector((state) => state.users.isValid);
+  const usersIsValid = useSelector((state) => state.otp.isVerified);
   const userId = useSelector((state) => state.users.user_Id);
   const [str1, setStr] = useState("");
   const navigate = useNavigate();
 
   const [otpIndex, setOtpIndex] = useState(0);
   const [otp, setOtp] = useState(new Array(OTP_LENGTH).fill(""));
-
-  const [verify, setVerify] = useState({ letter: str1 });
+  const data = str1;
+  const [verify, setVerify] = useState({});
   const inputRef = useRef();
   const focusNextInputField = (index) => {
     setOtpIndex(index + 1);
@@ -46,14 +45,6 @@ export default function EmailVerification() {
     setOtpIndex(nextIndex);
   };
 
-  if (usersName === "" ? null : usersName)
-    if (usersEmail === "" ? null : usersEmail)
-      if (usersIsValid === false) {
-        console.log("test");
-        navigate("/");
-        console.log("test");
-      }
-
   const handleOtpChange = (e, index) => {
     const value = e.target.value;
     let newOtp = [...otp];
@@ -65,8 +56,12 @@ export default function EmailVerification() {
     console.log(e[index]);
     str = str += newOtp.toString();
     console.log(str);
-    setVerify({ userId: userId, data: str1 });
-    setStr(str);
+    if (otp[index - 1] !== "") {
+      setStr(str);
+      console.log(verify, "allple");
+      setVerify({ otp: str, userId: userId });
+    }
+
     // setVerify({ userId: userId, OTP: otp.toString() });
     console.log(str);
 
@@ -74,7 +69,7 @@ export default function EmailVerification() {
       focusPreviousInputField(index);
     } else {
       focusNextInputField(index);
-      setVerify({ userId: userId });
+
       // let str = "";
       // otp.forEach((e) => {
       //   if (e === " ") {
@@ -88,16 +83,25 @@ export default function EmailVerification() {
       // });
     }
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (isValidOTP(otp)) {
       dispatch(verifyEmailOtp(verify));
+
+      if (usersIsValid === true) {
+        console.log(usersIsValid, "line333333");
+        navigate("/");
+      }
     }
   };
   useEffect(() => {
     inputRef.current?.focus();
-  }, [otpIndex]);
+    if (usersIsValid === true) {
+      console.log(usersIsValid, "line333333");
+      navigate("/");
+    }
+  }, [otpIndex, handleSubmit]);
   return (
     <FormContainer>
       <Container>
@@ -128,7 +132,6 @@ export default function EmailVerification() {
           >
             Sign-Up
           </button>
-          <div className="flex justify-between"></div>
         </form>
       </Container>
     </FormContainer>

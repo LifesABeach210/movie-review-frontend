@@ -2,10 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 import Axios from "../middleware/axios";
 import { useNavigate } from "react-router-dom";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-
+import { useSelector } from "react-redux";
 export const verifyEmailOtp = createAsyncThunk(
   "users/verify-email-thunk",
   async (userData) => {
+    const { otp, userId } = userData;
+    // let a = otp.split(",");
+    // let b = otp.join("");
+    // console.log(b);
     console.log(userData, "userData");
     let response = await Axios.post("/users/verify-email", userData);
     console.log(
@@ -13,17 +17,16 @@ export const verifyEmailOtp = createAsyncThunk(
       userData,
       "first error more than likely line 9 userSlice"
     );
-    return {
-      user: response.user,
-    };
+    return response;
   }
 );
 
 export const otpSlice = createSlice({
   name: "otp",
   initialState: {
-    isValid: false,
+    isVerified: false,
     otp: "",
+    username: "",
   },
   reducers: {
     verifyOtp: (state, action) => {
@@ -43,6 +46,8 @@ export const otpSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(verifyEmailOtp.fulfilled, (state, action) => {
       console.log("ACTION:", action, "STATE:", state);
+      state.isVerified = action.payload.data.user.isVerified;
+      state.username = action.payload.data.user.userName;
     });
   },
 });

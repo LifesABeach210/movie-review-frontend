@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Dispatch } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import FormInput from "../components/form/FormInput";
 import Submit from "../components/form/Submit";
 import Title from "../components/form/Title";
@@ -8,13 +8,16 @@ import { Container } from "../components/user/Container";
 import CustomLink from "../components/user/CustomLink";
 import { commonModalClass } from "../context/utils/modelClass";
 import { loginUser } from "../redux/userSlice";
+import { useNavigate } from "react-router-dom";
 export const Signin = () => {
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { email, password } = user;
+  const userSignedIn = useSelector((state) => state.user);
   const handleChange = ({ target }) => {
     const { value, name } = target;
 
@@ -25,11 +28,11 @@ export const Signin = () => {
     e.preventDefault();
     try {
       const result = await dispatch(loginUser(user));
-      console.log("LOGIN-RESULT-TOKEN:", result.payload.data["token"]);
-      if (result.payload.data["token"] === undefined) {
-        console.log("login failed");
+      console.log("LOGIN-RESULT-TOKEN:", result.payload.data);
+      if (result.payload.data.isVerified === true) {
+        navigate("/");
       } else {
-        console.log("login suceeded");
+        navigate("/auth/verify-email");
       }
     } catch (error) {
       console.error();

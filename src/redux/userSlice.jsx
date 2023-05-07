@@ -28,7 +28,7 @@ export const loginUser = createAsyncThunk("users/signin", async (userData) => {
   );
   //const data = await response.json();
   return {
-    data: response.data.user,
+    data: response.data,
   };
 });
 
@@ -40,6 +40,7 @@ export const userSlice = createSlice({
     password: "",
     isValid: false,
     user_Id: "",
+    isVerified: false,
   },
   reducers: {},
 
@@ -53,11 +54,12 @@ export const userSlice = createSlice({
       state.isValid = true;
     });
     builder.addCase(loginUser.fulfilled, (state, action) => {
+      console.log(action.payload.data._id, "payload");
+      state.user_Id = action.payload.data._id;
       state.username = action.payload.data.username;
+      console.log(state, "loging from state");
       state.email = action.payload.data.email;
-      state.password = action.payload.data.password;
-      state.user_Id = action.payload.data.user_Id;
-      console.log(state.email);
+      state.isVerified = action.payload.data.isVerified;
     });
   },
 });
