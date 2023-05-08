@@ -23,7 +23,7 @@ export const editPost = createAsyncThunk("users/editPost", async (editPost) => {
 });
 export const deletePost = createAsyncThunk("users/deletepost", async (id) => {
   console.log("POST DATA TO BE DELETED:", id);
-  let response = await Axios.delete(`/users/delete-post/posts/:id=${id}`, id);
+  let response = await Axios.delete(`/users/delete-post/ID/${id}`, id);
   console.log("EDIT POST RESPONSE:", response);
   return response;
 });
@@ -45,7 +45,8 @@ export const inputReviewSlice = createSlice({
     hasSubmited: true,
     user_Id: "",
     userPost: [],
-    id: "",
+    ID: "",
+    reRender: false,
   },
   reducers: {},
 
@@ -56,7 +57,7 @@ export const inputReviewSlice = createSlice({
       // state.email = action.payload.email;
       // state.password = action.payload.password;
       // state.user_Id = action.payload.user_Id;
-      state.id = action.payload.data.data.id;
+      state.ID = action.payload.data.data.ID;
       state.uuid = action.payload.data.data.uuid;
       state.userPost = [action.payload.data.data, ...state.userPost];
       state.hasSubmited = action.payload.data.data.hasSubmited;
@@ -72,6 +73,7 @@ export const inputReviewSlice = createSlice({
     });
     builder.addCase(deletePost.fulfilled, (state, action) => {
       console.log("DELETE_POST_PAYLOAD", action.payload);
+      state.reRender = true;
     });
   },
 });

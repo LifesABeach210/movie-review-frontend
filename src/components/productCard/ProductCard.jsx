@@ -100,7 +100,7 @@ export const ProductCard = (props) => {
         {" "}
         <button
           className="bg-red-500 hover:bg-red-400 text-white font-bold py-1 px-1 border-b-1 border-blue-700 hover:border-red-500 rounded"
-          onClick={() => props.deleteProduct(props.id)}
+          onClick={() => props.deleteProduct(props.ID)}
         >
           Delete!
         </button>

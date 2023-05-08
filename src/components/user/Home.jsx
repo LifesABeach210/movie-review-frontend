@@ -17,14 +17,19 @@ export default function Home() {
   const currentPostData = useSelector((state) => state.post);
   var postData = useSelector((state) => state.post.userPost);
   const userId = useSelector((state) => state.users.user_Id);
-
+  const Render = useSelector((state) => state.post.reRender);
   const dispatch = useDispatch();
   useEffect(() => {
     if (checkUser && openPage === true) {
       dispatch(getPost(userId));
       console.log(postData, "POST DATA FROM HOME");
     }
-  }, [checkUser, openPage, firstnamePost, getPost]);
+
+    if (Render === true) {
+      dispatch(getPost(userId));
+      console.log(postData, "POST DATA FROM HOME");
+    }
+  }, [checkUser, openPage, firstnamePost, getPost, Render]);
 
   const [review, setReviews] = useState({
     firstname: "",
@@ -113,8 +118,8 @@ export default function Home() {
                   firstname={post.firstname}
                   lastname={post.lastname}
                   post={post.post}
-                  deleteProduct={(id) => dispatch(deletePost(post.id))}
-                  editProduct={(id) => dispatch(editPost(post.id))}
+                  deleteProduct={(id) => dispatch(deletePost(post.ID))}
+                  editProduct={(id) => dispatch(editPost(post.ID))}
                 />
               );
             })
