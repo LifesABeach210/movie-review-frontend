@@ -3,22 +3,28 @@ import { Container } from "./Container";
 import FormContainer from "../form/FormContainer";
 import { commonModalClass } from "../../context/utils/modelClass";
 import FormInput from "../form/FormInput";
-
 import Title from "../form/Title";
 import { useSelector } from "react-redux";
 import { submitReview, getPost } from "../../redux/inputReviewSlice";
 import { useDispatch } from "react-redux";
+import { ProductCard } from "../productCard/ProductCard";
+import { editPost } from "../../redux/inputReviewSlice";
+import { deletePost } from "../../redux/inputReviewSlice";
 export default function Home() {
   const openPage = useSelector((state) => state.users.isVerified);
+  const firstnamePost = useSelector((state) => state.users.firstname);
   const checkUser = useSelector((state) => state.post.hasSubmited);
-  const checkForPost = useSelector((state) => state.post.post);
+  const currentPostData = useSelector((state) => state.post);
+  var postData = useSelector((state) => state.post.userPost);
   const userId = useSelector((state) => state.users.user_Id);
+
   const dispatch = useDispatch();
   useEffect(() => {
     if (checkUser && openPage === true) {
       dispatch(getPost(userId));
+      console.log(postData, "POST DATA FROM HOME");
     }
-  }, []);
+  }, [checkUser, openPage, firstnamePost, getPost]);
 
   const [review, setReviews] = useState({
     firstname: "",
@@ -40,7 +46,7 @@ export default function Home() {
       review.firstname !== "" ||
       review.lastname !== "" ||
       review.Bio !== "" ||
-      review.reviewPost !== ""
+      review.post !== ""
     ) {
       dispatch(submitReview(review));
     }
@@ -53,7 +59,7 @@ export default function Home() {
           <FormContainer className=" flex gap-4">
             <Container className=" ">
               <form className={commonModalClass + " w-72" + "left-0 right-0"}>
-                <Title>Enter A New Comidian</Title>
+                <Title>Enter A New Post</Title>
                 <FormInput
                   onChange={handleChange}
                   value={firstname}
@@ -90,19 +96,31 @@ export default function Home() {
                   className="w-full h-10 rounded dark:bg-white bg-secondary dark:text-secondary text-white hover:bg-opacity-90 transition font-semibold text-lg cursor-pointer p-1"
                   onClick={handleSubmit}
                 >
-                  Sign-Up
+                  Submit
                 </button>
               </form>
             </Container>
 
-            <Container className="flex-22">
-              <p>helllo world</p>
-            </Container>
-            <Container className="flex-22">
-              <p>helloo</p>
-            </Container>
+            <Container className="flex-22"></Container>
+            <Container className="flex-22"></Container>
           </FormContainer>
-          <Container className=" w-100 inset-0 dark:bg-primary bg-white my-12 px-12P"></Container>
+          {postData[1] !== undefined ? (
+            postData.map((post, index) => {
+              return (
+                <ProductCard
+                  key={index}
+                  Bio={post.Bio}
+                  firstname={post.firstname}
+                  lastname={post.lastname}
+                  post={post.post}
+                  deleteProduct={(id) => dispatch(deletePost(post.id))}
+                  editProduct={(id) => dispatch(editPost(post.id))}
+                />
+              );
+            })
+          ) : (
+            <span></span>
+          )}
         </>
       ) : (
         <>
